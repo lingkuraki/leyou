@@ -1,0 +1,51 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: home-service
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/heimaly
+    username: root
+    password: 1234
+  rabbitmq:
+    host: 192.168.25.131
+    username: leyou
+    password: leyou
+    virtual-host: /leyou
+    template:  # 模板AmqpTemplate
+      retry:   # 失败是否重试
+        enabled: true # 开启重试
+        initial-interval: 10000ms # 第一次重试时间间隔
+        max-interval: 300000ms # 最常重试间隔，超过此间隔则不再重试
+        multiplier: 2 # 下次重试间隔的倍数
+      exchange: leyou.home.exchange # 缺省的交换机名称，没有显示交换机名称，则默认使用该交换机
+    publisher-confirms: true # 生产者的确认机制，有过消息发送失败且有错误回执，则触发重试
+  jackson:
+    time-zone: GMT+8
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:10086/eureka
+  instance:
+    lease-renewal-interval-in-seconds: 5 # 每5秒发送一次心跳
+    lease-expiration-duration-in-seconds: 15 # 15秒不发送就过期
+    prefer-ip-address: true
+    ip-address: 127.0.0.1
+    instance-id: ${spring.application.name}:${server.port}
+
+logging:
+  level:
+    com.leyou.home.mapper: debug
+
+mybatis:
+  type-aliases-package: com.leyou.home.pojo
+  configuration:
+    map-underscore-to-camel-case: true
+
+ly:
+  jwt:
+    pubKeyPath: D:/heima/rsa/rsa.pub # 公钥地址
+    cookieName: LY_TOKEN # cookie的名称

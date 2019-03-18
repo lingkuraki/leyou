@@ -1,0 +1,40 @@
+server:
+  port: 8091
+
+spring:
+  application:
+    name: seckill-service
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/heimaly
+    username: root
+    password: 1234
+  redis:
+    host: 192.168.25.131
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:10086/eureka
+  instance:
+    lease-renewal-interval-in-seconds: 5 # 每5秒发送一次心跳
+    lease-expiration-duration-in-seconds: 15 # 15秒不发送就过期
+    prefer-ip-address: true
+    ip-address: 127.0.0.1
+    instance-id: ${spring.application.name}:${server.port}
+
+logging:
+  level:
+    com.leyou.seckill.mapper: debug
+
+mybatis:
+  type-aliases-package: com.leyou.seckill.pojo
+  configuration:
+    map-underscore-to-camel-case: true
+
+ly:
+  jwt:
+    pubKeyPath: D:/heima/rsa/rsa.pub # 公钥地址
+    cookieName: LY_TOKEN # cookie的名称

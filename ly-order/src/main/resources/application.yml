@@ -1,0 +1,57 @@
+server:
+  port: 8089
+
+spring:
+  application:
+    name: order-service
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    url: jdbc:mysql://127.0.0.1:3306/heimaly
+    password: 1234
+  jackson:
+    default-property-inclusion: non_null
+  redis:
+    host: 192.168.25.131
+  rabbitmq:
+    host: 192.168.25.131
+    username: leyou
+    password: leyou
+    virtual-host: /leyou
+    template: # 模板AmqpTemplate配置
+      retry: # 失败是否重试
+        enabled: true # 开启失败重试
+        initial-interval: 10000ms # 第一次重试时间间隔
+        max-interval: 300000ms # 最长重试间隔，超过此间隔则不再重试
+        multiplier: 2 # 下次重试间隔的倍数
+      exchange: leyou.order.exchange # 缺省的交换机名称，没有设置则使用此默认的
+    publisher-confirms: true # 生产者的确认机制，有过消息发送失败且有错误回执，则触发重试
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:10086/eureka
+
+mybatis:
+  type-aliases-package: com.leyou.order.pojo
+  configuration:
+    map-underscore-to-camel-case: true
+
+ly:
+  jwt:
+    pubKeyPath: D:/heima/rsa/rsa.pub # 公钥地址
+    cookieName: LY_TOKEN # cookie的名称
+  worker:
+    workerId: 1
+    dataCenterId: 1
+  pay:
+    appId: wx8397f8696b538317
+    mchId: 1473426802
+    key: T6m9iK73b0kn9g5v426MKfHQH7X8rKwb
+    connectTimeoutMs: 5000
+    readTimeOutMs: 10000
+    notifyUrl: http://7bn7yu.natappfree.cc/wxpay/notify
+
+logging:
+  level:
+    com.leyou.order.mapper: debug
